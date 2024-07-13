@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Cairo } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header/Header";
+import Footer from "@/components/Footer/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 const cario = Cairo({
@@ -24,7 +25,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={cario.className}>
         <Header />
-        <main>{children}</main>
+
+        <main className="mt-[120px]">{children}</main>
+        <Footer />
       </body>
     </html>
   );
