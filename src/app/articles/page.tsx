@@ -3,7 +3,9 @@ import { Artcle } from "@/utils/type";
 //components
 import ActicleCard from "../../components/acticles/ActicleCard";
 export default async function page() {
-  const response = await fetch("https://jsonplaceholder.typicode.com//posts");
+  const response = await fetch("https://jsonplaceholder.typicode.com//posts", {
+    cache: "no-store",
+  });
   const aritcles: Artcle[] = await response.json();
 
   if (!response.ok) {

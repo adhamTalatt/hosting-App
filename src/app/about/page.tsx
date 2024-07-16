@@ -1,10 +1,11 @@
-import CloudImage from "../../../public/cloud-hosting-removebg-preview.png";
 import Image from "next/image";
 export default function page() {
   return (
-    <section className="fix-height container m-auto">
-      <h1 className="text-3xl font-bold text-gray-800 p-5">About Page</h1>
-      <Image src={CloudImage} alt="cloud" width={500} height={500} priority />
+    <section className="fix-height container m-auto flex flex-col justify-center items-center">
+      <h1 className="text-3xl font-bold text-gray-800 p-5">About This App</h1>
+      <p className="px-5 text-gray-600 text-xl">
+        The best web hosting solution for your online success
+      </p>
     </section>
   );
 }

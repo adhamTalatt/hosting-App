@@ -12,3 +12,9 @@ body {
 footer {
   margin-top: auto;
 }
+
+@layer components {
+  .fix-height {
+    min-height: calc(100vh - 200px);
+  }
+}
