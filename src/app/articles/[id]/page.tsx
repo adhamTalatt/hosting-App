@@ -1,6 +1,6 @@
-import { request } from "http";
-
 import { Artcle } from "@/utils/type";
+import AddCommentsForm from "@/components/comments/AddCommentsForm";
+import CommentItem from "@/components/comments/CommentItem";
 
 interface SingleActiclePageProps {
   params: { id: string };
@@ -25,6 +25,13 @@ export default async function SingleActiclePage({
         <div className="text-gray-400">1/1/2024</div>
         <p className="text-gray-800 text-xl mt-5">{aritcle.body}</p>
       </div>
+      <AddCommentsForm />
+      <h4 className="text-xl text-gray-800 ps-1 font-semibold mb-2 mt-7">
+        Comments
+      </h4>
+      <CommentItem />
+      <CommentItem />
+      <CommentItem />
     </section>
   );
 }

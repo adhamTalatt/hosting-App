@@ -1,7 +1,8 @@
 import React from "react";
 import Link from "next/link";
+import { ArtclId } from "../../utils/type";
 
-export default function ActicleCard({ id, body, title }) {
+export default function ActicleCard({ id, body, title }: ArtclId) {
   return (
     <div
       key={id}

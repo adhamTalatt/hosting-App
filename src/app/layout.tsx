@@ -29,7 +29,7 @@ export default function RootLayout({
       <body className={cario.className}>
         <Header />
         <ToastContainer position="top-center" limit={2} />
-        <main className="mt-[120px]">{children}</main>
+        <main className="mt-[100px]">{children}</main>
         <Footer />
       </body>
     </html>

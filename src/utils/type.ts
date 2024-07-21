@@ -4,3 +4,9 @@ export type Artcle = {
   title: string;
   body: string;
 };
+
+export type ArtclId = {
+  id: number;
+  title: string;
+  body: string;
+};

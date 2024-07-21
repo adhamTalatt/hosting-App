@@ -1,9 +1,10 @@
 "use client";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 export default function LoginForm() {
   const [emailandpass, setEmailandpass] = useState({ email: "", pass: "" });
-
+  const router = useRouter();
   const formSubmitHandler = (e: React.FormEvent) => {
     e.preventDefault();
     const emailVal: boolean = ValidateEmail(emailandpass.email);
@@ -13,10 +14,9 @@ export default function LoginForm() {
     } else if (!passVal) {
       return toast.error("Password is not Validate ");
     } else {
+      router.replace("/");
       return toast.success("Email and Password are Validate ");
     }
-
-    console.log({ em: emailVal, pass: passVal });
   };
 
   function ValidateEmail(inputText: string) {

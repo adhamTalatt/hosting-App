@@ -27,7 +27,7 @@ export default function Hero() {
         </div>
       </div>
       <div>
-        <Image src={CloudImage} alt="" width={500} height={500} />
+        <Image src={CloudImage} alt="" width={500} height={500} priority />
       </div>
     </div>
   );

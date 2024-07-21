@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
 body {
   min-height: 100vh;
   display: flex;
@@ -17,4 +22,7 @@ footer {
   .fix-height {
     min-height: calc(100vh - 200px);
   }
+}
+.overflow-height {
+  height: calc(100vh - 150px);
 }

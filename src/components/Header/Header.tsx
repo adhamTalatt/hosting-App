@@ -8,10 +8,10 @@ import Navbar from "./Navbar";
 
 export default function Header() {
   return (
-    <header className=" fixed top-0 left-0 w-full z-200 transition-all duration-200 ">
+    <header className=" fixed h-[100px] top-0 left-0 w-full z-200 transition-all duration-200 bg-red-900 ">
       <div
         className={
-          "h-[100px] flex items-center justify-between p-[0px_40px] border-b-[4px] border-solid  border-[#909090] bg-[#405D72] relative "
+          " h-full flex items-center justify-between p-[0px_40px] border-b-[2px] border-solid  border-[#909090] bg-[#405D72] relative "
         }
       >
         <Navbar />
