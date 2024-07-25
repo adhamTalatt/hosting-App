@@ -1,25 +1,67 @@
 import { NextRequest, NextResponse } from "next/server";
+import { creatArticleSchena } from "@/utils/validtionShemas";
+import { CreateArtileDto } from "@/utils/dtos";
+import prisma from "@/utils/db";
 
-const articles = [
-  {
-    id: 1,
-    userId: 101,
-    title: "typeScript",
-    body: "typescrtip is a powerfull programming language",
-  },
-  {
-    id: 2,
-    userId: 102,
-    title: "javascript",
-    body: "javascript is a powerfull programming language",
-  },
-  {
-    id: 3,
-    userId: 103,
-    title: " c++ ",
-    body: " c++  is a powerfull programming language",
-  },
-];
-export function GET(requset: NextRequest) {
-  return NextResponse.json(articles, { status: 200 });
+const { v4: uuidv4 } = require("uuid");
+
+/*
+ * @method GET
+ * @route http://localhost:3000/api/articles
+ * @desc Get All Articles
+ * @access public
+ */
+
+export async function GET(requset: NextRequest) {
+  try {
+    const articles = await prisma.article.findMany();
+    return NextResponse.json(articles, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { massage: "internal server error " },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * @method POST
+ * @route http://localhost:3000/api/articles
+ * @desc Create New Article
+ * @access public
+ */
+
+export async function POST(requset: NextRequest) {
+  try {
+    const body: CreateArtileDto = await requset.json();
+
+    //  ----------- input validation with (zod) -----------
+    //  ---------------------------------------------------
+
+    //  import { creatArticleSchena } from "@/utils/validtionShemas";
+
+    const validation = creatArticleSchena.safeParse(body);
+
+    if (!validation.success) {
+      return NextResponse.json(validation.error.issues[0].message, {
+        status: 400,
+      });
+    }
+    // ---------------------------------------------------------
+    // ---------------------------------------------------------
+
+    const newArticle = await prisma.article.create({
+      data: {
+        title: body.title,
+        description: body.description,
+      },
+    });
+
+    return NextResponse.json(newArticle, { status: 201 });
+  } catch (error) {
+    return NextResponse.json(
+      { massage: "internal server error " },
+      { status: 500 }
+    );
+  }
 }
