@@ -5,7 +5,7 @@ import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import "react-toastify/dist/ReactToastify.css";
 
 const inter = Inter({ subsets: ["latin"] });
 const cario = Cairo({
@@ -28,7 +28,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={cario.className}>
         <Header />
-        <ToastContainer position="top-center" limit={2} />
+        {/* <ToastContainer position="top-center" limit={2} /> */}
         <main className="mt-[100px]">{children}</main>
         <Footer />
       </body>

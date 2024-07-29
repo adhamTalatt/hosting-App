@@ -3,8 +3,7 @@ import { RegisterUserDto } from "@/utils/dtos";
 import { creatRegisterUserSchema } from "@/utils/validtionShemas";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import generateJWT from "@/utils/generateToken";
-import { JWTPayload } from "@/utils/type";
+import { setCookie } from "@/utils/generateToken";
 
 /**
  * @method POST
@@ -13,7 +12,7 @@ import { JWTPayload } from "@/utils/type";
  * @access public
  */
 
-export async function POST(requset: NextResponse) {
+export async function POST(requset: NextRequest) {
   try {
     const body: RegisterUserDto = await requset.json();
 
@@ -55,16 +54,16 @@ export async function POST(requset: NextResponse) {
       },
     });
 
-    const jwtPayload: JWTPayload = {
+    const cookie = setCookie({
       id: newUser.id,
       username: newUser.username,
       isAdmin: newUser.isAdmin,
-    };
+    });
 
-    //@Todo -> generate JWT Token
-    const token = generateJWT(jwtPayload);
-
-    return NextResponse.json({ ...newUser, token }, { status: 201 });
+    return NextResponse.json(
+      { ...newUser, massage: "Registered & Authenticated" },
+      { status: 201, headers: { "Set-Cookie": cookie } }
+    );
   } catch (error) {
     return NextResponse.json(
       { massage: "internal servar error" },

@@ -4,10 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/utils/db";
 
 import bcrypt from "bcryptjs";
-import generateJWT from "@/utils/generateToken";
-import { JWTPayload } from "@/utils/type";
+import { setCookie } from "@/utils/generateToken";
 
-/*
+/**
  * @method POST
  * @route http://localhost:3000/api/users/login
  * @desc login User ( Log In or Sign In )
@@ -43,18 +42,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const jwtPayload: JWTPayload = {
+    const cookie = setCookie({
       id: user.id,
       isAdmin: user.isAdmin,
       username: user.username,
-    };
-
-    //@Todo -> generate JWT Token
-    const token = generateJWT(jwtPayload);
+    });
 
     return NextResponse.json(
-      { massage: "Authenticated", token },
-      { status: 200 }
+      { massage: "Authenticated" },
+      { status: 200, headers: { "Set-Cookie": cookie } }
     );
   } catch (error) {
     return NextResponse.json(
