@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { articles } from "./data";
 
 // create article Schema
 export const creatArticleSchena = z.object({
@@ -12,7 +13,7 @@ export const creatArticleSchena = z.object({
   description: z.string().min(2),
 });
 
-export const creatRegisterUserSchema = z.object({
+export const createRegisterUserSchema = z.object({
   email: z.string().min(3).max(200).email(),
   username: z.string().min(3).max(200),
   password: z.string().min(6),
@@ -21,4 +22,9 @@ export const creatRegisterUserSchema = z.object({
 export const loginUserSchema = z.object({
   email: z.string().min(3).max(200).email(),
   password: z.string().min(6),
+});
+
+export const createCommentSchema = z.object({
+  text: z.string().min(3).max(200),
+  articleId: z.number(),
 });

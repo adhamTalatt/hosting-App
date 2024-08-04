@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { updateArtileDto } from "@/utils/dtos";
 import prisma from "@/utils/db";
+import { verifyToken } from "@/utils/verifyToken";
 
 interface Props {
   params: { id: string };
@@ -17,6 +18,18 @@ export async function GET(requset: NextRequest, { params }: Props) {
   try {
     const article = await prisma.article.findUnique({
       where: { id: parseInt(params.id) },
+      include: {
+        comments: {
+          include: {
+            user: {
+              select: {
+                username: true,
+              },
+            },
+          },
+          orderBy: { createdAt: "desc" },
+        },
+      },
     });
 
     if (!article) {
@@ -38,11 +51,18 @@ export async function GET(requset: NextRequest, { params }: Props) {
  * @method PUT
  * @route http://localhost:3000/api/articles/:id
  * @desc Upadte aritcle By Id
- * @access public
+ * @access private (only admin can update)
  */
 
 export async function PUT(requset: NextRequest, { params }: Props) {
   try {
+    const user = verifyToken(requset);
+    if (user === null || user.isAdmin === false) {
+      return NextResponse.json(
+        { massage: "only admin , access denied" },
+        { status: 403 }
+      );
+    }
     const article = await prisma.article.findUnique({
       where: { id: parseInt(params.id) },
     });
@@ -75,11 +95,18 @@ export async function PUT(requset: NextRequest, { params }: Props) {
  * @method DELETE
  * @route http://localhost:3000/api/articles/:id
  * @desc Delete aritcle By Id
- * @access public
+ * @access private (only admin can update)
  */
 
 export async function DELETE(requset: NextRequest, { params }: Props) {
   try {
+    const user = verifyToken(requset);
+    if (user === null || user.isAdmin === false) {
+      return NextResponse.json(
+        { massage: "only admin , access denied" },
+        { status: 403 }
+      );
+    }
     const article = prisma.article.findUnique({
       where: { id: parseInt(params.id) },
     });

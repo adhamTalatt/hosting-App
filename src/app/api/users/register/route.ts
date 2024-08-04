@@ -1,6 +1,6 @@
 import prisma from "@/utils/db";
 import { RegisterUserDto } from "@/utils/dtos";
-import { creatRegisterUserSchema } from "@/utils/validtionShemas";
+import { createRegisterUserSchema } from "@/utils/validtionShemas";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { setCookie } from "@/utils/generateToken";
@@ -16,7 +16,7 @@ export async function POST(requset: NextRequest) {
   try {
     const body: RegisterUserDto = await requset.json();
 
-    const validation = creatRegisterUserSchema.safeParse(body);
+    const validation = createRegisterUserSchema.safeParse(body);
 
     if (!validation.success) {
       return NextResponse.json(

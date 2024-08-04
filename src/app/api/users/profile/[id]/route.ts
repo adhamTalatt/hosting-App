@@ -115,6 +115,12 @@ export async function PUT(request: NextRequest, { params }: Props) {
     const body = (await request.json()) as UpdateUserDto;
 
     if (body.password) {
+      if (body.password.trim().length < 6) {
+        return NextResponse.json(
+          { masssage: "password should be minimum 6 characters" },
+          { status: 400 }
+        );
+      }
       const salt = await bcrypt.genSalt(10);
       body.password = await bcrypt.hash(body.password, salt);
     }
@@ -127,7 +133,12 @@ export async function PUT(request: NextRequest, { params }: Props) {
         password: body.password,
       },
       select: {
-        password: false,
+        id: true,
+        email: true,
+        username: true,
+        isAdmin: true,
+        createdAt: true,
+        updatedAt: true,
       },
     });
     return NextResponse.json(updatedUser, { status: 200 });
