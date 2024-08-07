@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import style from "./header.module.css";
 import { GrTechnology } from "react-icons/gr";
@@ -54,7 +55,7 @@ export default function Navbar() {
           <Link
             onClick={() => setTogggle(false)}
             className={style.navLink}
-            href={"/articles"}
+            href={"/articles?pageNumber=1"}
           >
             Articles
           </Link>

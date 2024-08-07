@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     } else {
       articles = await prisma.article.findMany({ take: 6 });
     }
-    return NextResponse.json({ articles }, { status: 200 });
+    return NextResponse.json(articles, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { massage: "internal server error " },

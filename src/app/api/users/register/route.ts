@@ -32,7 +32,7 @@ export async function POST(requset: NextRequest) {
     //Make sure the email is not already in use
     if (userEmail) {
       return NextResponse.json(
-        { message: "this user already registered" },
+        { massage: "this user already registered" },
         { status: 400 }
       );
     }

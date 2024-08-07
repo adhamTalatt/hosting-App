@@ -2,20 +2,36 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import { DOMAIN } from "@/utils/constants";
+import BtnSpinner from "@/components/home/BtnSpinner";
+
 export default function LoginForm() {
-  const [emailandpass, setEmailandpass] = useState({ email: "", pass: "" });
+  const [emailandpass, setEmailandpass] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
+
   const router = useRouter();
-  const formSubmitHandler = (e: React.FormEvent) => {
+  const formSubmitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
     const emailVal: boolean = ValidateEmail(emailandpass.email);
-    const passVal: boolean = Validatepassword(emailandpass.pass);
+    const passVal: boolean = Validatepassword(emailandpass.password);
     if (!emailVal) {
       return toast.error("Email is not Validate ");
-    } else if (!passVal) {
+    }
+    if (!passVal) {
       return toast.error("Password is not Validate ");
-    } else {
+    }
+
+    try {
+      setLoading(true);
+      await axios.post(`${DOMAIN}/api/users/login`, emailandpass);
       router.replace("/");
-      return toast.success("Email and Password are Validate ");
+      router.refresh();
+      setLoading(false);
+    } catch (error: any) {
+      toast.error(error?.response.data.massage);
+      console.log(error);
+      setLoading(false);
     }
   };
 
@@ -60,17 +76,17 @@ export default function LoginForm() {
         className="mb-4 border rounded p-2 text-xl"
         type="password"
         placeholder="Enter You Password"
-        value={emailandpass.pass}
+        value={emailandpass.password}
         onChange={(e) => {
-          setEmailandpass({ ...emailandpass, pass: e.target.value });
+          setEmailandpass({ ...emailandpass, password: e.target.value });
         }}
       />
       <button
         type="submit"
         className="text-2xl text-white bg-blue-800 p-2 rounded-lg font-bold"
-        // onClick={}
+        disabled={loading}
       >
-        Login
+        {loading ? <BtnSpinner /> : "Login"}
       </button>
     </form>
   );

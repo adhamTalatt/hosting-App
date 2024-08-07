@@ -1,13 +1,27 @@
 "use client";
 import { useState } from "react";
 import { toast } from "react-toastify";
-export default function AddCommentsForm() {
-  const [Text, setText] = useState("");
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { DOMAIN } from "@/utils/constants";
 
-  const formSubmitHandler = (e: React.FormEvent) => {
+interface AddCommintFormProp {
+  articleId: number;
+}
+export default function AddCommentsForm({ articleId }: AddCommintFormProp) {
+  const router = useRouter();
+  const [text, setText] = useState("");
+
+  const formSubmitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (Text.trim().length <= 0) {
-      return toast.error("Please write somrthing");
+    if (text.trim().length <= 0) return toast.error("Please write somrthing");
+    try {
+      await axios.post(`${DOMAIN}/api/comments`, { text, articleId });
+      router.refresh();
+      setText("");
+    } catch (error: any) {
+      toast.error(error?.response.data.massage);
+      console.log(error);
     }
   };
 
@@ -20,7 +34,7 @@ export default function AddCommentsForm() {
         className=" rounded-lg text-xl p-2 w-full bg-white focus:shadow-md"
         type="text"
         placeholder="Add commentc ..."
-        value={Text}
+        value={text}
         onChange={(e) => {
           setText(e.target.value);
         }}

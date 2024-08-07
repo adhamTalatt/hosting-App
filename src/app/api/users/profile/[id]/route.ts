@@ -3,6 +3,7 @@ import prisma from "@/utils/db";
 import { verifyToken } from "@/utils/verifyToken";
 import { UpdateUserDto } from "@/utils/dtos";
 import bcrypt from "bcryptjs";
+import { updateUserSchema } from "@/utils/validtionShemas";
 
 interface Props {
   params: { id: string };
@@ -19,6 +20,7 @@ export async function DELETE(request: NextRequest, { params }: Props) {
   try {
     const user = await prisma.user.findUnique({
       where: { id: parseInt(params.id) },
+      include: { comments: true },
     });
 
     if (!user) {
@@ -27,8 +29,19 @@ export async function DELETE(request: NextRequest, { params }: Props) {
 
     const userFromToken = verifyToken(request);
 
-    if (userFromToken !== null && userFromToken.id === user.id) {
-      await prisma.user.delete({ where: { id: parseInt(params.id) } });
+    if (
+      (userFromToken !== null && userFromToken.id === user.id) ||
+      (userFromToken?.isAdmin === true && userFromToken !== null)
+    ) {
+      // deleting the user
+      await prisma.user.delete({
+        where: { id: parseInt(params.id) },
+      });
+
+      const commentIds = user?.comments.map((comment) => comment.id);
+      await prisma.comment.deleteMany({
+        where: { id: { in: commentIds } },
+      });
       return NextResponse.json(
         { massage: "your profile (account) has been deleted" },
         { status: 200 }
@@ -113,14 +126,15 @@ export async function PUT(request: NextRequest, { params }: Props) {
     }
 
     const body = (await request.json()) as UpdateUserDto;
+    const validation = updateUserSchema.safeParse(body);
 
+    if (!validation.success) {
+      return NextResponse.json(
+        { massage: validation.error.errors[0].message },
+        { status: 400 }
+      );
+    }
     if (body.password) {
-      if (body.password.trim().length < 6) {
-        return NextResponse.json(
-          { masssage: "password should be minimum 6 characters" },
-          { status: 400 }
-        );
-      }
       const salt = await bcrypt.genSalt(10);
       body.password = await bcrypt.hash(body.password, salt);
     }

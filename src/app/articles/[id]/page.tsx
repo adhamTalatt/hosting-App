@@ -1,6 +1,10 @@
-import { Artcle } from "@/utils/type";
+import { Article } from "@prisma/client";
 import AddCommentsForm from "@/components/comments/AddCommentsForm";
 import CommentItem from "@/components/comments/CommentItem";
+import { getSingleArticle } from "@/app/apiCalls/articleApiCall";
+import { SingleAricle } from "@/utils/type";
+import { cookies } from "next/headers";
+import { verifyTokenforPage } from "@/utils/verifyToken";
 
 interface SingleActiclePageProps {
   params: { id: string };
@@ -9,29 +13,28 @@ interface SingleActiclePageProps {
 export default async function SingleActiclePage({
   params,
 }: SingleActiclePageProps) {
-  const response = await fetch(
-    `https://jsonplaceholder.typicode.com//posts/${params.id}`
-  );
-  const aritcle: Artcle = await response.json();
-  if (!response.ok) {
-    throw new Error("Failed To Fetch articles ");
-  }
+  const aritcle: SingleAricle = await getSingleArticle(params.id);
+  const token = cookies().get("jwtToken")?.value || "";
+  const payLoad = verifyTokenforPage(token);
   return (
     <section className=" fix-height container m-auto w-full px-5 pt-8 md:w-3/4">
       <div className="bg-white p-7 rounded-lg ">
         <h1 className="text-3xl font-bold text-gray-700 mb-2">
           {aritcle.title}
         </h1>
-        <div className="text-gray-400">1/1/2024</div>
-        <p className="text-gray-800 text-xl mt-5">{aritcle.body}</p>
+        <div className="text-gray-400">
+          {new Date(aritcle.createdAt).toDateString()}
+        </div>
+        <p className="text-gray-800 text-xl mt-5">{aritcle.description}</p>
       </div>
-      <AddCommentsForm />
+      {payLoad ? <AddCommentsForm articleId={aritcle.id} /> : ""}
+
       <h4 className="text-xl text-gray-800 ps-1 font-semibold mb-2 mt-7">
         Comments
       </h4>
-      <CommentItem />
-      <CommentItem />
-      <CommentItem />
+      {aritcle.comments.map((comment) => {
+        return <CommentItem key={comment.id} comment={comment} />;
+      })}
     </section>
   );
 }

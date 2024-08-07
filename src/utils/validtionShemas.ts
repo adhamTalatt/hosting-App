@@ -28,3 +28,9 @@ export const createCommentSchema = z.object({
   text: z.string().min(3).max(200),
   articleId: z.number(),
 });
+
+export const updateUserSchema = z.object({
+  email: z.string().min(3).max(200).email().optional(),
+  username: z.string().min(3).max(200).optional(),
+  password: z.string().min(6).optional(),
+});

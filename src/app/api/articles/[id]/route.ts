@@ -66,6 +66,7 @@ export async function PUT(requset: NextRequest, { params }: Props) {
     const article = await prisma.article.findUnique({
       where: { id: parseInt(params.id) },
     });
+
     if (!article) {
       return NextResponse.json(
         { massage: "article not found" },
@@ -107,8 +108,11 @@ export async function DELETE(requset: NextRequest, { params }: Props) {
         { status: 403 }
       );
     }
-    const article = prisma.article.findUnique({
+    const article = await prisma.article.findUnique({
       where: { id: parseInt(params.id) },
+      include: {
+        comments: true,
+      },
     });
     if (!article) {
       return NextResponse.json(
@@ -116,11 +120,19 @@ export async function DELETE(requset: NextRequest, { params }: Props) {
         { status: 500 }
       );
     }
+    // deleting the article
     await prisma.article.delete({
       where: { id: parseInt(params.id) },
     });
+    // deleting the comments that belong to this article
+    const commentIds: number[] = article?.comments.map((comment) => comment.id);
+    await prisma.comment.deleteMany({
+      where: { id: { in: commentIds } },
+    });
+
     return NextResponse.json({ massage: "article Deleted" }, { status: 200 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { massage: "internal server error " },
       { status: 500 }

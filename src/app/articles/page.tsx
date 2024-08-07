@@ -1,40 +1,51 @@
-import { Artcle } from "@/utils/type";
+import { Article } from "@prisma/client";
 import type { Metadata } from "next";
 //components
-import ActicleCard from "../../components/acticles/ActicleCard";
+import ArticleCard from "../../components/acticles/ArticleCard";
 import SearchArticleInput from "../../components/acticles/SearchArticleInput";
 import Pagination from "./Pagination";
+import { getArticles, getArticlesCount } from "../apiCalls/articleApiCall";
+import { ARTICLE_PER_PAGE } from "@/utils/constants";
+
+interface ArticlePageNumber {
+  searchParams: { pageNumber: string };
+}
 
 export const metadata: Metadata = {
   title: "Aritcles Page",
   description: "This is aritcles page",
 };
-export default async function page() {
-  // await new Promise((resolve) => {
-  // setTimeout(resolve, 3000);
-  // });
-  const response = await fetch("https://jsonplaceholder.typicode.com//posts");
-  const aritcles: Artcle[] = await response.json();
 
-  if (!response.ok) {
-    throw new Error("Failed To Fetch articles ");
+export default async function page({ searchParams }: ArticlePageNumber) {
+  const { pageNumber } = searchParams;
+
+  const count: number = await getArticlesCount();
+  const pages = Math.ceil(count / ARTICLE_PER_PAGE);
+
+  let pageNumberhandle;
+  if (parseInt(pageNumber) <= 0) {
+    pageNumberhandle = 1;
+  } else if (parseInt(pageNumber) > pages) {
+    pageNumberhandle = pages;
+  } else {
+    pageNumberhandle = parseInt(pageNumber) as number;
   }
+
+  const aritcles: Article[] = await getArticles(pageNumberhandle);
+
   return (
     <section className=" container m-auto px-5 mt-[10px]  ">
       <SearchArticleInput />
       <div className="flex items-center justify-center flex-wrap gap-7 lg:my-[100px]">
-        {aritcles.slice(0, 6).map((item) => {
-          return (
-            <ActicleCard
-              key={item.id}
-              id={item.id}
-              body={item.body}
-              title={item.title}
-            />
-          );
+        {aritcles.map((item) => {
+          return <ArticleCard key={item.id} article={item} />;
         })}
       </div>
-      <Pagination />
+      <Pagination
+        pageNumber={pageNumberhandle}
+        pages={pages}
+        route={"/articles"}
+      />
     </section>
   );
 }
