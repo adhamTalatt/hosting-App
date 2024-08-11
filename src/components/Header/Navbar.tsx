@@ -9,7 +9,14 @@ import { MdClose } from "react-icons/md";
 
 //React hooks
 import { useState } from "react";
-export default function Navbar() {
+
+import { cookies } from "next/headers";
+import { verifyTokenforPage } from "@/utils/verifyToken";
+
+interface NavbarProps {
+  isAdmin: boolean | undefined;
+}
+export default function Navbar({ isAdmin }: NavbarProps) {
   const [togggle, setTogggle] = useState(false);
   return (
     <nav className={style.navbar}>
@@ -66,13 +73,15 @@ export default function Navbar() {
           >
             About
           </Link>
-          <Link
-            onClick={() => setTogggle(false)}
-            className={style.navLink}
-            href={"/admin"}
-          >
-            Admin Dashboard
-          </Link>
+          {(isAdmin || false) && (
+            <Link
+              onClick={() => setTogggle(false)}
+              className={style.navLink}
+              href={"/admin"}
+            >
+              Admin Dashboard
+            </Link>
+          )}
         </ul>
       </div>
     </nav>

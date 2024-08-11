@@ -4,10 +4,16 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { DOMAIN } from "@/utils/constants";
 import { useRouter } from "next/navigation";
-
-export default function AddArticleForm() {
+import { Article } from "@prisma/client";
+interface EditArticleFormProps {
+  article: Article;
+}
+export default function EditArticleForm({ article }: EditArticleFormProps) {
   const router = useRouter();
-  const [inputvalue, setinputvalue] = useState({ title: "", description: "" });
+  const [inputvalue, setinputvalue] = useState({
+    title: article.title,
+    description: article.description,
+  });
 
   const formSubmitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,10 +25,9 @@ export default function AddArticleForm() {
     }
 
     try {
-      await axios.post(`${DOMAIN}/api/articles`, inputvalue);
+      await axios.put(`${DOMAIN}/api/articles/${article.id}`, inputvalue);
+      return toast.success("article updated");
       router.refresh();
-      setinputvalue({ title: "", description: "" });
-      return toast.success("Validate and New article added  ");
     } catch (error: any) {
       toast.error(error?.response.data.massage);
     }
@@ -33,7 +38,6 @@ export default function AddArticleForm() {
       <input
         className="mb-4 border rounded p-2 text-xl"
         type="text"
-        placeholder="Enter Artice Title"
         value={inputvalue.title}
         onChange={(e) => {
           setinputvalue({ ...inputvalue, title: e.target.value });
@@ -42,7 +46,6 @@ export default function AddArticleForm() {
       <textarea
         className="mb-4 p-2 lg:text-xl rounded resize-none"
         rows={5}
-        placeholder="Enter Artice Description"
         value={inputvalue.description}
         onChange={(e) => {
           setinputvalue({ ...inputvalue, description: e.target.value });
@@ -50,10 +53,9 @@ export default function AddArticleForm() {
       />
       <button
         type="submit"
-        className="text-2xl text-white bg-blue-800 hover:bg-blue-900 transition duration-200 p-2 rounded-lg font-bold"
-        // onClick={}
+        className="text-2xl text-white bg-green-800 hover:bg-green-900 transition duration-200 p-2 rounded-lg font-bold"
       >
-        Add New Article
+        Edit Article
       </button>
     </form>
   );

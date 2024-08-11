@@ -1,6 +1,7 @@
 import AddArticleForm from "./AddArticleForm";
-
+import { protectionAdminPage } from "./protectionAdminPage";
 export default function page() {
+  protectionAdminPage();
   return (
     <div className=" fix-height flex items-center justify-center px-5 lg:px-20">
       <div className="shadow p-4 bg-[#F7E7DC] rounded w-full ">

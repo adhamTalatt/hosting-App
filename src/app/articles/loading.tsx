@@ -1,6 +1,5 @@
-const articlesSkeletom = [1, 2, 3, 4, 5, 6];
-
 export default function loading() {
+  const articlesSkeletom = [1, 2, 3, 4, 5, 6];
   return (
     <section className=" fix-height container m-auto px-5 mt-[10px] animate-pulse -z-10">
       <div className="my-5 w-full md:w-2/3 m-auto bg-gray-300 rounded">

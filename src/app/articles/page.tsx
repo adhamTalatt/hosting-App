@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 //components
 import ArticleCard from "../../components/acticles/ArticleCard";
 import SearchArticleInput from "../../components/acticles/SearchArticleInput";
-import Pagination from "./Pagination";
+import Pagination from "../../components/acticles/Pagination";
 import { getArticles, getArticlesCount } from "../apiCalls/articleApiCall";
 import { ARTICLE_PER_PAGE } from "@/utils/constants";
 

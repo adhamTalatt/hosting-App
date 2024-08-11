@@ -64,6 +64,7 @@ export async function GET(request: NextRequest) {
       );
     }
     const comments = await prisma.comment.findMany();
+
     return NextResponse.json(comments, { status: 200 });
   } catch (error) {
     return NextResponse.json(

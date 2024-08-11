@@ -44,7 +44,7 @@ export async function PUT(request: NextRequest, { params }: Props) {
     return NextResponse.json(updateCommet, { status: 200 });
   } catch (error) {
     return NextResponse.json(
-      { masssage: "internal servar error" },
+      { massage: "internal servar error" },
       { status: 500 }
     );
   }

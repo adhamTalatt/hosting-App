@@ -13,6 +13,7 @@ interface SingleActiclePageProps {
 export default async function SingleActiclePage({
   params,
 }: SingleActiclePageProps) {
+  // await new Promise((resolve) => setTimeout(resolve, 5000));
   const aritcle: SingleAricle = await getSingleArticle(params.id);
   const token = cookies().get("jwtToken")?.value || "";
   const payLoad = verifyTokenforPage(token);
@@ -32,9 +33,19 @@ export default async function SingleActiclePage({
       <h4 className="text-xl text-gray-800 ps-1 font-semibold mb-2 mt-7">
         Comments
       </h4>
-      {aritcle.comments.map((comment) => {
-        return <CommentItem key={comment.id} comment={comment} />;
-      })}
+      {aritcle.comments.length === 0 ? (
+        <div>No comments ...</div>
+      ) : (
+        aritcle.comments.map((comment) => {
+          return (
+            <CommentItem
+              key={comment.id}
+              comment={comment}
+              userId={payLoad?.id}
+            />
+          );
+        })
+      )}
     </section>
   );
 }

@@ -10,7 +10,7 @@ export default async function SearchArticlePage({
   searchParams: { serchText },
 }: serchTextArticlePageProp) {
   const articles: Article[] = await getArticlesBasedOnSearch(serchText);
-  console.log(articles);
+
   return (
     <section className="fix-height container m-auto px-5">
       {articles.length === 0 ? (

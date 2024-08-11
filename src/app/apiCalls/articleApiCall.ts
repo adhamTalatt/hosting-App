@@ -7,7 +7,8 @@ export async function getArticles(
   pageNumber: string | number | undefined
 ): Promise<Article[]> {
   const response = await fetch(
-    `${DOMAIN}/api/articles?pageNumber=${pageNumber}`
+    `${DOMAIN}/api/articles?pageNumber=${pageNumber}`,
+    { cache: "no-store" }
   );
 
   if (!response.ok) {
@@ -19,7 +20,9 @@ export async function getArticles(
 //========================================================================================
 //get articles count from db
 export async function getArticlesCount() {
-  const response = await fetch(`${DOMAIN}/api/articles/count`);
+  const response = await fetch(`${DOMAIN}/api/articles/count`, {
+    cache: "no-store",
+  });
 
   if (!response.ok) {
     throw new Error("Failed To get articles count ");

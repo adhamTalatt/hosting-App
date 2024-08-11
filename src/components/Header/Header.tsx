@@ -11,9 +11,9 @@ import LogoutBtn from "./LogoutBtn";
 
 export default function Header() {
   const tooken = cookies().get("jwtToken")?.value || "";
-  const verifyTokenPauload = verifyTokenforPage(tooken);
+  const Pauload = verifyTokenforPage(tooken);
 
-  verifyTokenPauload?.username;
+  Pauload?.username;
   return (
     <header className=" fixed h-[100px] top-0 left-0 w-full z-40 transition-all duration-200 bg-red-900 ">
       <div
@@ -21,12 +21,12 @@ export default function Header() {
           " h-full flex items-center justify-between p-[0px_40px] border-b-[2px] border-solid  border-[#909090] bg-[#405D72] relative "
         }
       >
-        <Navbar />
+        <Navbar isAdmin={Pauload?.isAdmin} />
         <div className={style.right}>
-          {verifyTokenPauload ? (
+          {Pauload ? (
             <>
               <strong className="text-white md:text-xl capitalize">
-                {verifyTokenPauload?.username}
+                {Pauload?.username}
               </strong>
 
               <LogoutBtn />

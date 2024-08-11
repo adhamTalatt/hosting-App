@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { articles } from "./data";
 
 // create article Schema
 export const creatArticleSchena = z.object({
