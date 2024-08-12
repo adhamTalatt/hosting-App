@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     return NextResponse.json(
-      { Massage: " Internale server error" },
+      { massage: " Internale server error" },
       { status: 500 }
     );
   }
