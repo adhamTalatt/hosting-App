@@ -6,6 +6,7 @@ import SearchArticleInput from "../../components/acticles/SearchArticleInput";
 import Pagination from "../../components/acticles/Pagination";
 import { getArticles, getArticlesCount } from "../apiCalls/articleApiCall";
 import { ARTICLE_PER_PAGE } from "@/utils/constants";
+import prisma from "@/utils/db";
 
 interface ArticlePageNumber {
   searchParams: { pageNumber: string };
@@ -16,10 +17,10 @@ export const metadata: Metadata = {
   description: "This is aritcles page",
 };
 
-export default async function page({ searchParams }: ArticlePageNumber) {
-  const { pageNumber } = searchParams;
-
-  const count: number = await getArticlesCount();
+export default async function page({
+  searchParams: { pageNumber },
+}: ArticlePageNumber) {
+  const count: number = await prisma.article.count();
   const pages = Math.ceil(count / ARTICLE_PER_PAGE);
 
   let pageNumberhandle;
@@ -31,15 +32,19 @@ export default async function page({ searchParams }: ArticlePageNumber) {
     pageNumberhandle = parseInt(pageNumber) as number;
   }
 
-  const aritcles: Article[] = await getArticles(pageNumberhandle);
+  const articles: Article[] = await getArticles(pageNumberhandle);
 
   return (
     <section className=" container m-auto px-5 mt-[10px]  ">
       <SearchArticleInput />
       <div className="flex items-center justify-center flex-wrap gap-7 lg:my-[100px]">
-        {aritcles.map((item) => {
-          return <ArticleCard key={item.id} article={item} />;
-        })}
+        {articles.length === 0 ? (
+          <div> No Aritcles </div>
+        ) : (
+          articles.map((item) => {
+            return <ArticleCard key={item.id} article={item} />;
+          })
+        )}
       </div>
       <Pagination
         pageNumber={pageNumberhandle}

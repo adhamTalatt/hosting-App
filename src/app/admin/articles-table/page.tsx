@@ -5,6 +5,7 @@ import Link from "next/link";
 import { getArticles, getArticlesCount } from "@/app/apiCalls/articleApiCall";
 import Pagination from "@/components/acticles/Pagination";
 import DeleteArticleBtn from "./DeleteArticleBtn";
+import prisma from "@/utils/db";
 
 interface AdminArticleTableProps {
   searchParams: { pageNumber: string };
@@ -14,10 +15,18 @@ export default async function AdminArticlesTable({
 }: AdminArticleTableProps) {
   protectionAdminPage();
 
-  const articles: Article[] = await getArticles(pageNumber);
-  const count: number = await getArticlesCount();
+  const count: number = await prisma.article.count();
   const pages = Math.ceil(count / ARTICLE_PER_PAGE);
 
+  let pageNumberhandle;
+  if (parseInt(pageNumber) <= 0) {
+    pageNumberhandle = 1;
+  } else if (parseInt(pageNumber) > pages) {
+    pageNumberhandle = pages;
+  } else {
+    pageNumberhandle = parseInt(pageNumber) as number;
+  }
+  const articles: Article[] = await getArticles(pageNumberhandle);
   return (
     <section className="p-5">
       <h1 className="mb-7 text-2xl font-semibold text-gray-700">Articles</h1>
@@ -31,31 +40,40 @@ export default async function AdminArticlesTable({
           </tr>
         </thead>
         <tbody>
-          {articles.map((article) => (
-            <tr key={article.id} className="border-b border-t border-gray-300">
-              <td className="p-3 text-gray-700">{article.title}</td>
-              <td className="hidden lg:inline-block text-gray-700 font-normal p-3 ">
-                {new Date(article.createdAt).toDateString()}
-              </td>
-              <td className="p-3">
-                <Link
-                  href={`/admin/articles-table/edit/${article.id}`}
-                  className="bg-green-600 text-white rounded-lg py-1 px-2 inline-block text-center mb-2 me-2 lg:me-3 hover:bg-green-800 transition duration-200"
-                >
-                  Edit
-                </Link>
-                <DeleteArticleBtn articleId={article.id} />
-              </td>
-              <td>
-                <Link
-                  href={`/articles/${article.id}`}
-                  className="text-white bg-blue-600 rounded-lg p-2 hover:bg-blue-800"
-                >
-                  Read More
-                </Link>
-              </td>
+          {articles.length === 0 ? (
+            <tr>
+              <td className="text-2xl p-3">No Articles</td>
             </tr>
-          ))}
+          ) : (
+            articles.map((article) => (
+              <tr
+                key={article.id}
+                className="border-b border-t border-gray-300"
+              >
+                <td className="p-3 text-gray-700">{article.title}</td>
+                <td className="hidden lg:inline-block text-gray-700 font-normal p-3 ">
+                  {new Date(article.createdAt).toDateString()}
+                </td>
+                <td className="p-3">
+                  <Link
+                    href={`/admin/articles-table/edit/${article.id}`}
+                    className="bg-green-600 text-white rounded-lg py-1 px-2 inline-block text-center mb-2 me-2 lg:me-3 hover:bg-green-800 transition duration-200"
+                  >
+                    Edit
+                  </Link>
+                  <DeleteArticleBtn articleId={article.id} />
+                </td>
+                <td>
+                  <Link
+                    href={`/articles/${article.id}`}
+                    className="text-white bg-blue-600 rounded-lg p-2 hover:bg-blue-800"
+                  >
+                    Read More
+                  </Link>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
       <div className="mt-20">

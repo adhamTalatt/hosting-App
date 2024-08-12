@@ -26,6 +26,7 @@ export async function GET(requset: NextRequest) {
       },
     });
     //---*
+
     return NextResponse.json(articles, { status: 200 });
   } catch (error) {
     return NextResponse.json(

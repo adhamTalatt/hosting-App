@@ -21,17 +21,26 @@ export default async function AdminCommentsPage() {
           </tr>
         </thead>
         <tbody>
-          {comments.map((comment) => (
-            <tr key={comment.id} className="border-b border-t border-gray-300">
-              <td className="p-3 text-gray-700">{comment.text}</td>
-              <td className="hidden lg:inline-block font-semibold text-gray-700 p-3">
-                {new Date(comment.createdAt).toDateString()}
-              </td>
-              <td>
-                <DeleteCommentBtn commentId={comment.id} />
-              </td>
+          {comments.length === 0 ? (
+            <tr>
+              <td className="text-2xl p-3">No Comments</td>
             </tr>
-          ))}
+          ) : (
+            comments.map((comment) => (
+              <tr
+                key={comment.id}
+                className="border-b border-t border-gray-300"
+              >
+                <td className="p-3 text-gray-700">{comment.text}</td>
+                <td className="hidden lg:inline-block font-semibold text-gray-700 p-3">
+                  {new Date(comment.createdAt).toDateString()}
+                </td>
+                <td>
+                  <DeleteCommentBtn commentId={comment.id} />
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </section>
