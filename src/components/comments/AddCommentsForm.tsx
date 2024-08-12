@@ -20,7 +20,7 @@ export default function AddCommentsForm({ articleId }: AddCommintFormProp) {
       router.refresh();
       setText("");
     } catch (error: any) {
-      toast.error(error?.response.data.massage);
+      toast.error(error?.response?.data.massage);
       console.log(error);
     }
   };

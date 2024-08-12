@@ -17,7 +17,7 @@ const DeleteArticleBtn = ({ articleId }: DeleteArticleBtnProps) => {
         toast.success("article deleted");
       }
     } catch (error: any) {
-      toast.error(error?.response.data.massage);
+      toast.error(error?.response?.data.massage);
       console.log(error);
     }
   };

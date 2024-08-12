@@ -29,7 +29,7 @@ export default function EditArticleForm({ article }: EditArticleFormProps) {
       return toast.success("article updated");
       router.refresh();
     } catch (error: any) {
-      toast.error(error?.response.data.massage);
+      toast.error(error?.response?.data.massage);
     }
   };
 

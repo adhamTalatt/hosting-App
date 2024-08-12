@@ -29,7 +29,7 @@ export default function LoginForm() {
       router.refresh();
       setLoading(false);
     } catch (error: any) {
-      toast.error(error?.response.data.massage);
+      toast.error(error?.response?.data.massage);
       console.log(error);
       setLoading(false);
     }
