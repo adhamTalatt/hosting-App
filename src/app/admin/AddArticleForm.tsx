@@ -24,7 +24,7 @@ export default function AddArticleForm() {
       setinputvalue({ title: "", description: "" });
       return toast.success("Validate and New article added  ");
     } catch (error: any) {
-      toast.error(error?.response.data.massage);
+      toast.error(error?.response?.data.massage);
     }
   };
 

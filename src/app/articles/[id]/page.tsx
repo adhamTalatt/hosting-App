@@ -5,10 +5,17 @@ import { getSingleArticle } from "@/app/apiCalls/articleApiCall";
 import { SingleAricle } from "@/utils/type";
 import { cookies } from "next/headers";
 import { verifyTokenforPage } from "@/utils/verifyToken";
+import { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 interface SingleActiclePageProps {
   params: { id: string };
 }
+
+export const metadata: Metadata = {
+  title: "About Page",
+  description: "This is about page",
+};
 
 export default async function SingleActiclePage({
   params,
@@ -17,6 +24,10 @@ export default async function SingleActiclePage({
   const aritcle: SingleAricle = await getSingleArticle(params.id);
   const token = cookies().get("jwtToken")?.value || "";
   const payLoad = verifyTokenforPage(token);
+
+  if (!aritcle) {
+    redirect("/not-found.tsx");
+  }
   return (
     <section className=" fix-height container m-auto w-full px-5 pt-8 md:w-3/4">
       <div className="bg-white p-7 rounded-lg ">

@@ -1,7 +1,12 @@
 import LoginForm from "./LoginForm";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Log In Page",
+  description: "This is log in page",
+};
 export default function page() {
   return (
     <section className=" fix-height container m-auto px-7 flex justify-center items-center">

@@ -1,6 +1,7 @@
 import { Article } from "@prisma/client";
 import { DOMAIN } from "@/utils/constants";
 import { SingleAricle } from "@/utils/type";
+import { redirect } from "next/navigation";
 
 // Get articles based on pageNumber
 export async function getArticles(
@@ -57,7 +58,7 @@ export async function getSingleArticle(
   });
 
   if (!response.ok) {
-    throw new Error("Failed To Fetch articles ");
+    redirect("/not-found.tsx");
   }
   return response.json();
 }

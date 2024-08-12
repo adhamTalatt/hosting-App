@@ -5,7 +5,12 @@ import axios from "axios";
 import { DOMAIN } from "@/utils/constants";
 import BtnSpinner from "@/components/home/BtnSpinner";
 import { useRouter } from "next/navigation";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Register Page",
+  description: "This is register page",
+};
 export default function Registerform() {
   const router = useRouter();
 
